@@ -3,6 +3,7 @@ import { faker } from '@faker-js/faker';
 import { MainPage } from '../src/pages/main.page';
 import { RegisterPage } from '../src/pages/register.page';
 import { ArticlePage } from '../src/pages/article.page';
+import { CommentPage} from '../src/pages/comment.page';
 
 const URL = 'https://realworld.qa.guru/';
 
@@ -71,10 +72,7 @@ test.describe('Регистрация', () => {
     await registerPage.signup(user);
     
     await articlePage.createNewArticle(articleName);
-    
-    const articleHeading = page.getByRole('heading', { level: 1 });
-    await expect(articleHeading).toContainText(articleName);
-    
+    await expect(articlePage.articleHeading).toContainText(articleName);
     await articlePage.deleteArticle();
     await expect(mainPage.messageText).toBeVisible();
 });
@@ -90,11 +88,12 @@ test('Создание комментария', async ({page}) => {
     const mainPage = new MainPage(page);
     const registerPage = new RegisterPage(page);
     const articlePage = new ArticlePage(page);
+    const commentPage = new CommentPage(page);
 
     await mainPage.gotoRegister();
     await registerPage.signup(user);
     await articlePage.createNewArticle(articleName);
-    await articlePage.newComment();
+    await commentPage.newComment();
     await expect(articlePage.articleCheck).toContainText(commenText);
   });
 
@@ -109,13 +108,14 @@ test('Создание комментария', async ({page}) => {
     const mainPage = new MainPage(page);
     const registerPage = new RegisterPage(page);
     const articlePage = new ArticlePage(page);
+    const commentPage = new CommentPage(page);
 
     await mainPage.gotoRegister();
     await registerPage.signup(user);
     await articlePage.createNewArticle(articleName);
-    await articlePage.newComment();
+    await commentPage.newComment();
     await expect(articlePage.articleCheck).toContainText(commentText);
-    await articlePage.deleteComment();
+    await commentPage.deleteComment();
     await expect(articlePage.articleCheck).not.toContainText(commentText);
   });
 

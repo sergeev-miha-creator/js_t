@@ -14,11 +14,7 @@ export class ArticlePage {
         this.articleUpdate = page.getByRole('button', { name: 'Update Article' });
         //delete
         this.deleteArticleButton = page.getByRole('button').filter({hasText : 'Delete Article'}).first();
-        //create comment
-        this.writeComment = page.getByRole('textbox', { name: 'Write a comment...' });
-        this.postComment = page.getByRole('button', { name: 'Post Comment' });
-        //delete comment
-        this.deleteCommentButton = page.locator('.btn.btn-sm.btn-outline-secondary.pull-xs-right');
+        this.articleHeading = page.getByRole('heading', { level: 1 });
     }
     // бизнесовые действия со страницой
     async createNewArticle(articleName) {
@@ -50,21 +46,5 @@ export class ArticlePage {
         });
 
         await this.deleteArticleButton.click();
-    }
-
-    async newComment() {
-        await this.writeComment.click();
-        await this.writeComment.fill('Отличная статья!');
-        await this.postComment.click();
-    }
-
-    async deleteComment() {
-
-        this.page.once('dialog', dialog => {
-        dialog.accept();
-        });
-
-        await this.deleteCommentButton.click();
-        
     }
 }
